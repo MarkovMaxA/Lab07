@@ -6,7 +6,12 @@ import client.net.UDPClient
 import common.net.requests.*
 import common.net.responses.*
 import common.*
+import common.entities.LogStatus
+
 class AddIfMinCommand(val client: UDPClient): Command() {
+    override fun getPerm(): LogStatus{
+        return LogStatus.LOGGED
+    }
     override fun getName() = "add_if_min"
     override fun execute(argument: String?): Response {
         if (argument != null) throw CommandArgumentException("Method add_if_min don't support arguments")

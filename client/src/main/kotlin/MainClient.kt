@@ -5,6 +5,7 @@ import client.commands.*
 import commands.CommandManager
 import client.run.*
 import java.net.*
+import common.entities.LogStatus
 fun main() {
     val commandManager = CommandManager()
     
@@ -25,8 +26,12 @@ fun main() {
     commandManager.addCommand(RemoveLowerCommand(client))
     commandManager.addCommand(ShowCommand(client))
     commandManager.addCommand(UpdateCommand(client))
+    commandManager.addCommand(LoginCommand(client))
+    commandManager.addCommand((RegisterCommand(client)))
     val runManager = RunManager(commandManager,client)
 
+    var logStatus=LogStatus.NEEDLOGIN
+    println("Hello!\nIf you want to register, type command 'register', else 'login'")
     client.SetConnection()
-    runManager.run(commandManager)
+    runManager.run(commandManager,logStatus)
 }

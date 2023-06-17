@@ -5,7 +5,12 @@ import client.net.UDPClient
 import common.net.requests.*
 import common.net.responses.*
 import common.*
+import common.entities.LogStatus
+
 class RemoveLowerCommand(val client: UDPClient): Command() {
+    override fun getPerm(): LogStatus{
+        return LogStatus.LOGGED
+    }
     override fun getName() = "remove_lower"
     override fun execute(argument: String?): Response {
         if (argument == null) throw CommandArgumentException("Method remove_by_id don't support zero arguments")

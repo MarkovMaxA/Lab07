@@ -3,13 +3,17 @@ package client.commands
 import client.builders.MovieBuilder
 import client.net.UDPClient
 import common.*
+import common.entities.LogStatus
 import common.net.requests.*
 import common.net.responses.*
 
 
 class AddCommand(val client: UDPClient): Command() {
-    override fun getName() = "add"
 
+    override fun getName() = "add"
+    override fun getPerm(): LogStatus{
+        return LogStatus.LOGGED
+    }
 
     /**
      * Sending response method

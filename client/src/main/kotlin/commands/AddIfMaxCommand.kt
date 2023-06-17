@@ -6,8 +6,15 @@ import client.net.UDPClient
 import common.net.requests.*
 import common.net.responses.*
 import common.*
+import common.entities.LogStatus
+
 class AddIfMaxCommand(val client: UDPClient): Command() {
+
+    override fun getPerm(): LogStatus{
+        return LogStatus.LOGGED
+    }
     override fun getName() = "add_if_max"
+
     override fun execute(argument: String?): Response {
         if (argument != null) throw CommandArgumentException("Method add_if_max don't support arguments")
         val movie = MovieBuilder.build()

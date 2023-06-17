@@ -5,9 +5,13 @@ import client.builders.MovieBuilder
 import client.net.UDPClient
 import common.net.requests.*
 import common.*
+import common.entities.LogStatus
 import common.net.responses.Response
 
 class UpdateCommand(val client: UDPClient): Command() {
+    override fun getPerm(): LogStatus{
+        return LogStatus.LOGGED
+    }
     override fun getName() = "update"
     override fun execute(argument: String?): Response {
         if (argument == null) throw CommandArgumentException("Method remove_by_id don't support zero arguments")

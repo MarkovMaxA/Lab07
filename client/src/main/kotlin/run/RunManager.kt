@@ -5,6 +5,7 @@ import client.console.ConsoleManager
 import client.net.UDPClient
 import commands.CommandManager
 import common.CommandArgumentException
+import common.entities.LogStatus
 import common.net.responses.ResponseCode
 import common.net.responses.UniqueCommandResponse
 import org.slf4j.Logger
@@ -29,7 +30,7 @@ class RunManager(private val commandManager: CommandManager, private val client:
      *
      * @author Denis Berman
      */
-    fun run(commandManager: CommandManager) {
+    fun run(commandManager: CommandManager,logStatus:LogStatus) {
         var secs=5
         val logger: Logger = LoggerFactory.getLogger(UDPClient::class.java)
         while (ConsoleManager.hasNext()) {
@@ -40,12 +41,15 @@ class RunManager(private val commandManager: CommandManager, private val client:
             val command = commandManager.getCommands()[tokens[0]]
             while(!false){
                 try {
-                    val executionResponse = if (tokens.size > 1) commandExecute(command!!, tokens[1])
-                    else commandExecute(command!!, null)
-
+                    if (command!!.getPerm()!=logStatus){
+                        println("Login required!")
+                        break
+                    }
+                    val executionResponse = if (tokens.size > 1) commandExecute(command, tokens[1])
+                    else commandExecute(command, null)
                     println(executionResponse)
                 } catch (e: PortUnreachableException) {
-                    logger.error("Server is busy, next try in "+secs.toString()+" secs!")
+                    logger.error("Server is busy, next try in $secs secs!")
                     Thread.sleep(secs.toLong()*1000)
                     secs+=5
                     continue}

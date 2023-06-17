@@ -1,5 +1,6 @@
 package client.commands
 
+import common.entities.LogStatus
 import common.net.requests.*
 import common.net.responses.Response
 
@@ -8,6 +9,8 @@ import common.net.responses.Response
  */
 abstract class Command {
     abstract fun getName(): String
+
+    abstract fun getPerm(): LogStatus
 
     abstract fun execute(argument: String?): Response
 }
