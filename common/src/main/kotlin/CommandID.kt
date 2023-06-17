@@ -31,5 +31,6 @@ package common
     SHOW,
     UPDATE_BY_ID,
     EXIT,
+    USER,
     NONE
 }

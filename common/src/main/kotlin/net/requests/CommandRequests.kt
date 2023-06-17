@@ -2,10 +2,14 @@ package common.net.requests
 
 import common.CommandID
 import common.entities.Movie
+import common.entities.User
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UniqueCommandRequest(val movie: Movie? = null, val value: Long? = null, val commandIDc: CommandID) : Request(commandIDc)
+data class UniqueCommandRequest(val movie: Movie? = null,
+                                val value: Long? = null,
+                                val commandIDc: CommandID,
+                                val user: User? = null) : Request(commandIDc)
 
 @Serializable
 class AddRequest(val movie: Movie): Request(CommandID.ADD)
