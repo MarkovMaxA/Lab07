@@ -1,5 +1,6 @@
 package common.entities
 
+import ConcurrentHashSet
 import common.SetOverflowException
 import java.io.File
 import java.io.FileWriter
@@ -7,6 +8,7 @@ import java.nio.file.Paths
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashSet
 
 
@@ -14,7 +16,7 @@ import kotlin.collections.HashSet
  * Movie manager representative class
  */
 class MovieManager {
-    private val movieQueue: HashSet<Movie> = HashSet()
+    private var movieQueue = ConcurrentHashMap.newKeySet<Movie>()
     private val creationDate: LocalDate = LocalDate.now()
     private val maxElements = 10000
     private var fileName: String? = null
@@ -26,7 +28,7 @@ class MovieManager {
      * @return queue of movies [PriorityQueue]
      * @author Markov Maxim 2023
      */
-    fun getMovieQueue() = Collections.unmodifiableSet(movieQueue)
+    fun getMovieQueue() = movieQueue
 
     /**
      * add movie to collection method
@@ -153,5 +155,10 @@ class MovieManager {
                 )
             )
         }
+    }
+
+    fun load(hashSet: ConcurrentHashSet<Movie>) {
+        for (i in hashSet)
+            movieQueue.add(i)
     }
 }

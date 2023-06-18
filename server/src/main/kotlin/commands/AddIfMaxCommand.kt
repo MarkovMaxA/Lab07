@@ -6,9 +6,10 @@ import common.entities.MovieManager
 import common.net.requests.UniqueCommandRequest
 import common.net.responses.ResponseCode
 import common.net.responses.UniqueCommandResponse
+import managers.DataBaseManager
 import java.lang.Exception
 
-class AddIfMaxCommand(private val movieManager: MovieManager): Command() {
+class AddIfMaxCommand(private val movieManager: MovieManager, private val dataBaseManager: DataBaseManager): Command() {
     /**
      * Get information about command abstract method
      *
@@ -43,6 +44,8 @@ class AddIfMaxCommand(private val movieManager: MovieManager): Command() {
             request.movie!!.setNewId(movieManager.giveId())
 
             if ((request.movie!!.getOscarsCount() ?: -1) > maxCount) {
+                val id = dataBaseManager.addMovie(request.movie!!, request.user!!)
+                request.movie!!.setNewId(id.toLong())
                 movieManager.addMovie(request.movie!!)
                 UniqueCommandResponse(ResponseCode.OK, messageC = "Movie added to collection with id = ${request.movie!!.getId()}",
                     commandIDC = CommandID.ADDIFMAX)

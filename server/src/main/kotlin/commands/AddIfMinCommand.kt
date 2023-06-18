@@ -5,9 +5,10 @@ import common.entities.Movie
 import common.entities.MovieManager
 import common.net.requests.*
 import common.net.responses.*
+import managers.DataBaseManager
 import java.lang.Exception
 
-class AddIfMinCommand(private val movieManager: MovieManager): Command() {
+class AddIfMinCommand(private val movieManager: MovieManager, private val dataBaseManager: DataBaseManager): Command() {
     /**
      * Get information about command abstract method
      *
@@ -42,6 +43,8 @@ class AddIfMinCommand(private val movieManager: MovieManager): Command() {
             request.movie!!.setNewId(movieManager.giveId())
 
             if ((request.movie!!.getOscarsCount() ?: -1) < minCount) {
+                val id = dataBaseManager.addMovie(request.movie!!, request.user!!)
+                request.movie!!.setNewId(id.toLong())
                 movieManager.addMovie(request.movie!!)
                 UniqueCommandResponse(ResponseCode.OK, messageC = "Movie added to collection with id = ${request.movie!!.getId()}",
                     commandIDC = CommandID.ADDIFMIN)

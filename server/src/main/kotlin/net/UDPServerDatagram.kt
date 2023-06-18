@@ -1,14 +1,15 @@
 package net
 
 import commands.CommandManager
+import managers.DataBaseManager
 import java.math.BigInteger
 import java.net.*
 import java.nio.ByteBuffer
 import java.util.*
 import kotlin.math.ceil
 
-class UDPServerDatagram(address: InetAddress, commandManager: CommandManager, port: Int):
-    UDP(InetSocketAddress(address, port), commandManager) {
+class UDPServerDatagram(address: InetAddress, commandManager: CommandManager, port: Int, dataBaseManager: DataBaseManager):
+    UDP(InetSocketAddress(address, port), commandManager, dataBaseManager) {
     private val PACKET_SIZE
         get() = 1024
     private val DATA_SIZE

@@ -6,8 +6,9 @@ import common.entities.MovieManager
 import common.net.requests.UniqueCommandRequest
 import common.net.responses.ResponseCode
 import common.net.responses.UniqueCommandResponse
+import managers.DataBaseManager
 
-class RemoveLowerCommand(private val movieManager: MovieManager): Command() {
+class RemoveLowerCommand(private val movieManager: MovieManager, private val dataBaseManager: DataBaseManager): Command() {
     /**
      * Get information about command abstract method
      *
@@ -38,7 +39,10 @@ class RemoveLowerCommand(private val movieManager: MovieManager): Command() {
             .filter {(it.getOscarsCount() ?: 0) < (oscarsCount ?: 0)}
             .map(Movie::getId)
 
-        movieList.forEach{movieManager.removeElementById(it)}
+        movieList.forEach{
+            dataBaseManager.deleteMovie(it.toInt(), request.user!!)
+            movieManager.removeElementById(it)
+        }
 
         return UniqueCommandResponse(ResponseCode.OK,
             "All movies with oscars count value less than ${request.value} were removed",

@@ -1,5 +1,6 @@
 package managers
 
+import ConcurrentHashSet
 import common.entities.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -10,7 +11,6 @@ import java.sql.DriverManager
 import java.sql.SQLException
 import java.sql.Types
 import java.util.*
-import kotlin.collections.HashSet
 
 
 class DataBaseManager {
@@ -178,9 +178,10 @@ class DataBaseManager {
     }
 
     fun loadCollection() = try {
+        val collection: ConcurrentHashSet<Movie> = ConcurrentHashSet()
+
         val ps = connection.prepareStatement(DataBaseRequests.GET_MOVIES)
         val resultSet = ps.executeQuery()
-        val collection: HashSet<Movie> = HashSet()
         while (resultSet.next()) {
             collection.add(
                 Movie(
@@ -216,5 +217,6 @@ class DataBaseManager {
         collection
     } catch (e: Exception) {
         logger.error("Collection wasn't downloaded")
+        ConcurrentHashSet()
     }
 }

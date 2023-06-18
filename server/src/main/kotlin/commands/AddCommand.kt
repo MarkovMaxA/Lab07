@@ -4,9 +4,10 @@ import common.CommandID
 import common.entities.MovieManager
 import common.net.requests.*
 import common.net.responses.*
+import managers.DataBaseManager
 import java.lang.Exception
 
-class AddCommand(val movieManager: MovieManager): Command() {
+class AddCommand(val movieManager: MovieManager, private val dataBaseManager: DataBaseManager): Command() {
     /**
      * Get information about command abstract method
      *
@@ -33,6 +34,8 @@ class AddCommand(val movieManager: MovieManager): Command() {
     override fun execute(request: UniqueCommandRequest): UniqueCommandResponse {
         return try {
             request.movie!!.setNewId(movieManager.giveId())
+            val id = dataBaseManager.addMovie(request.movie!!, request.user!!)
+            request.movie!!.setNewId(id.toLong())
             movieManager.addMovie(request.movie!!)
             UniqueCommandResponse(ResponseCode.OK, messageC = "Movie added to collection with id = ${request.movie!!.getId()}",
                 commandIDC = CommandID.ADD)

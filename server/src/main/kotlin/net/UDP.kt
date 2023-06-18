@@ -1,18 +1,27 @@
 package net
 
 import commands.CommandManager
+import common.CommandID
 import common.net.requests.*
 import common.net.responses.UniqueCommandResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.protobuf.*
+import managers.DataBaseManager
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.net.SocketAddress
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.RecursiveTask
 
-abstract class UDP(var address: InetSocketAddress, val commandManager: CommandManager) {
+class ForkJoinTask(private val request: UniqueCommandRequest, private val commandManager: CommandManager) : RecursiveTask<UniqueCommandResponse>() {
+    override fun compute(): UniqueCommandResponse {
+        return commandManager.handle(request)
+    }
+}
+abstract class UDP(var address: InetSocketAddress, val commandManager: CommandManager, private val dataBaseManager: DataBaseManager) {
     protected val logger: Logger = LoggerFactory.getLogger(UDP::class.java)
     private var runFlag = true
 
@@ -73,12 +82,20 @@ abstract class UDP(var address: InetSocketAddress, val commandManager: CommandMa
             val response: UniqueCommandResponse
 
             try {
+                if (request.commandID != CommandID.REGISTER)
+                    if (!dataBaseManager.confirmUser(request.user!!))
+                        throw Exception("User auth failed")
                 response = commandManager.handle(request)
                 logger.info("Created response $response")
             } catch (e: Exception) {
                 logger.error("Command error $e", e)
                 continue
             }
+
+            //val task = ForkJoinTask(request, commandManager)
+            //val pool = ForkJoinPool()
+            //val responseFork = pool.invoke(task)
+            //pool.shutdown()
 
             val dataToSend = ProtoBuf.encodeToByteArray(response)
             logger.info("Ответ: $response")

@@ -5,8 +5,9 @@ import common.entities.MovieManager
 import common.net.requests.UniqueCommandRequest
 import common.net.responses.ResponseCode
 import common.net.responses.UniqueCommandResponse
+import managers.DataBaseManager
 
-class RemoveByIdCommand(private val movieManager: MovieManager): Command() {
+class RemoveByIdCommand(private val movieManager: MovieManager, private val dataBaseManager: DataBaseManager): Command() {
     /**
      * Get information about command abstract method
      *
@@ -32,11 +33,14 @@ class RemoveByIdCommand(private val movieManager: MovieManager): Command() {
      */
     override fun execute(request: UniqueCommandRequest): UniqueCommandResponse {
         return try {
-            if (movieManager.removeElementById(request.value!!))
-                UniqueCommandResponse(ResponseCode.OK,
+            if (dataBaseManager.deleteMovie(request.value!!.toInt(), request.user!!)) {
+                movieManager.removeElementById(request.value!!)
+                UniqueCommandResponse(
+                    ResponseCode.OK,
                     messageC = "Element with id = ${request.value!!} was removed",
                     commandIDC = CommandID.REMOVE_BY_ID
                 )
+            }
             else UniqueCommandResponse(ResponseCode.FAIL,
                 exceptionDataC = "Element with id = ${request.value!!} wasn't removed",
                 commandIDC = CommandID.REMOVE_BY_ID

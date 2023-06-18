@@ -5,8 +5,9 @@ import common.entities.MovieManager
 import common.net.requests.UniqueCommandRequest
 import common.net.responses.ResponseCode
 import common.net.responses.UniqueCommandResponse
+import managers.DataBaseManager
 
-class UpdateCommand(private val movieManager: MovieManager): Command() {
+class UpdateCommand(private val movieManager: MovieManager, private val dataBaseManager: DataBaseManager): Command() {
     /**
      * Get information about command abstract method
      *
@@ -32,8 +33,9 @@ class UpdateCommand(private val movieManager: MovieManager): Command() {
      */
     override fun execute(request: UniqueCommandRequest): UniqueCommandResponse {
         try {
-            return if (movieManager.removeElementById(request.value!!)) {
+            return if (dataBaseManager.updateMovie(request.value!!.toInt(), request.movie!!, request.user!!)) {//movieManager.removeElementById(request.value!!)) {
                 request.movie!!.setNewId(request.value!!)
+                movieManager.removeElementById(request.value!!)
                 movieManager.addMovie(request.movie!!)
                 UniqueCommandResponse(
                     ResponseCode.OK, messageC = "Element was updated",
