@@ -3,10 +3,6 @@ package client.builders
 import client.console.ConsoleManager
 import common.entities.*
 import common.*
-import common.entities.Movie
-import client.console.*
-import commmon.builders.Builder
-import java.lang.NumberFormatException
 
 /**
  * Movie builder representative class

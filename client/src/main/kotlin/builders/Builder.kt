@@ -1,4 +1,4 @@
-package commmon.builders
+package client.builders
 
 interface Builder<ObjectClassBuild> {
     /**
