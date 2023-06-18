@@ -21,7 +21,7 @@ class UserRegisterCommand(private val dataBaseManager: DataBaseManager): Command
      * @return name of command [String]
      * @author Markov Maxim 2023
      */
-    override fun getName() =  "user_register"
+    override fun getName() =  "register"
 
     /**
      * Execute command abstract method.

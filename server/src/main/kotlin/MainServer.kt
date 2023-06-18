@@ -32,6 +32,7 @@ fun main() = runBlocking {
     commandManager.addCommand(ShowCommand(movieManager), CommandID.SHOW)
     commandManager.addCommand(UpdateCommand(movieManager, dbManager), CommandID.UPDATE_BY_ID)
     commandManager.addCommand(UserRegisterCommand(dbManager), CommandID.REGISTER)
+    commandManager.addCommand(UserLoginCommand(), CommandID.LOGIN)
 
     val server = UDPServerDatagram(InetAddress.getLocalHost(), commandManager, 22837, dbManager)
 //    val thread = launch {
