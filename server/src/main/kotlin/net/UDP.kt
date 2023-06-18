@@ -3,6 +3,7 @@ package net
 import commands.CommandManager
 import common.CommandID
 import common.net.requests.*
+import common.net.responses.ResponseCode
 import common.net.responses.UniqueCommandResponse
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
@@ -74,7 +75,7 @@ abstract class UDP(var address: InetSocketAddress, val commandManager: CommandMa
                 continue
             }
 
-            val response: UniqueCommandResponse
+            var response: UniqueCommandResponse
 
             try {
                 if (request.commandID != CommandID.REGISTER)
@@ -84,6 +85,7 @@ abstract class UDP(var address: InetSocketAddress, val commandManager: CommandMa
                 logger.info("Created response $response")
             } catch (e: Exception) {
                 logger.error("Command error $e", e)
+                response = UniqueCommandResponse(ResponseCode.FAIL, exceptionDataC = "Incorrect login", commandIDC = CommandID.LOGIN)
                 continue
             }
 
