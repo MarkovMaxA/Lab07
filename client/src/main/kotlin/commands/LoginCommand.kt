@@ -6,6 +6,7 @@ import client.net.UDPClient
 import common.net.requests.*
 import common.*
 import common.entities.LogStatus
+import common.entities.User
 import common.net.responses.Response
 
 class LoginCommand(val client: UDPClient): Command() {
@@ -13,9 +14,10 @@ class LoginCommand(val client: UDPClient): Command() {
         return LogStatus.NEEDLOGIN
     }
     override fun getName() = "login"
-    override fun execute(argument: String?): Response {
+    override fun execute(argument: String?,user: User?): Response {
         if (argument != null) throw CommandArgumentException("Method login don't support arguments")
         val user= UserBuilder.build()
+        client.addUser(user)
         return client.sendAndReceiveCommand(UniqueCommandRequest(commandIDc = CommandID.LOGIN,user=user))
     }
 }

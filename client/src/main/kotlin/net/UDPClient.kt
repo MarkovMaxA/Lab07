@@ -1,5 +1,6 @@
 package client.net
 
+import common.entities.User
 import common.net.requests.*
 import common.net.responses.*
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -23,7 +24,7 @@ class UDPClient(address: InetAddress, port: Int) {
     private var client: DatagramChannel? = null
     private val address: InetSocketAddress
     private val logger: Logger = LoggerFactory.getLogger(UDPClient::class.java)
-
+    private var user: User?=null
 
     init {
         this.address = InetSocketAddress(address, port)
@@ -106,5 +107,11 @@ class UDPClient(address: InetAddress, port: Int) {
         return receiveData()
     }
     */
+    fun addUser(user: User){
+        this.user=user
+    }
+    fun getUser(): User?{
+        return this.user
+    }
 
 }

@@ -33,5 +33,5 @@ fun main() {
     var logStatus=LogStatus.NEEDLOGIN
     println("Hello!\nIf you want to register, type command 'register', else 'login'")
     client.SetConnection()
-    runManager.run(commandManager,logStatus)
+    runManager.run(commandManager)
 }

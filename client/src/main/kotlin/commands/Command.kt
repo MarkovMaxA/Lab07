@@ -1,6 +1,7 @@
 package client.commands
 
 import common.entities.LogStatus
+import common.entities.User
 import common.net.requests.*
 import common.net.responses.Response
 
@@ -12,5 +13,5 @@ abstract class Command {
 
     abstract fun getPerm(): LogStatus
 
-    abstract fun execute(argument: String?): Response
+    abstract fun execute(argument: String?,user: User?): Response
 }

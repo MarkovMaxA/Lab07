@@ -25,12 +25,13 @@ enum class ExecutionCode {
  * Progrum runtime representative class
  */
 class RunManager(private val commandManager: CommandManager, private val client: UDPClient) {
+    var logStatus=LogStatus.NEEDLOGIN
     /**
      * run method
      *
      * @author Denis Berman
      */
-    fun run(commandManager: CommandManager,logStatus:LogStatus) {
+    fun run(commandManager: CommandManager) {
         var secs=5
         val logger: Logger = LoggerFactory.getLogger(UDPClient::class.java)
         while (ConsoleManager.hasNext()) {
@@ -42,7 +43,11 @@ class RunManager(private val commandManager: CommandManager, private val client:
             while(!false){
                 try {
                     if (command!!.getPerm()!=logStatus){
-                        println("Login required!")
+                        if (logStatus==LogStatus.NEEDLOGIN) {
+                            println("Login required!")
+                        }else{
+                            println("Already logged!")
+                        }
                         break
                     }
                     val executionResponse = if (tokens.size > 1) commandExecute(command, tokens[1])
@@ -85,7 +90,8 @@ class RunManager(private val commandManager: CommandManager, private val client:
      * @author Markov Maxim 2023
      */
     private fun commandExecute(command: Command, argument: String?): String? {
-        val response = command.execute(argument) as UniqueCommandResponse
+        val user=client.getUser()
+        val response = command.execute(argument,user) as UniqueCommandResponse
         val responseCode = response.responseCode
         val message = response.message
         val exceptionData = response.exceptionData
@@ -98,7 +104,7 @@ class RunManager(private val commandManager: CommandManager, private val client:
         rez = message
 
         if (responseCode == ResponseCode.OK) {
-
+            logStatus=LogStatus.LOGGED
                 if (hashSetMovie!=null){
                     rez+="\n"
                     for (item in hashSetMovie) {
