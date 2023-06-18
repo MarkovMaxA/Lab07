@@ -239,6 +239,7 @@ class Movie {
             element<Person>("screenwriter")
             element<Long>("id")
             element<String>("creationDate")
+            element<String>("owner")
         }
     }
 
