@@ -57,6 +57,7 @@ class Movie {
     private var screenWriter: Person
     private var id: Long
     private var creationDate: LocalDate
+    private var owner: String = ""
 
     constructor(name: String, coordinates: Coordinates,
                 oscarsCount: Long?, length: Int,
@@ -98,6 +99,29 @@ class Movie {
 
         cntId = max(id, cntId)
         this.creationDate = LocalDate.now()
+    }
+
+    constructor(name: String, coordinates: Coordinates,
+                oscarsCount: Long?, length: Int,
+                genre: MovieGenre, mpaaRating: MpaaRating?,
+                screenWriter: Person, id: Long, date: LocalDate, owner: String) {
+        checkNameRestrictions(name)
+        checkOscarsCountRestrictions(oscarsCount)
+        checkLengthRestrictions(length)
+
+        this.name = name
+        this.coordinates = coordinates
+        this.oscarsCount = oscarsCount
+        this.length = length
+        this.genre = genre
+        this.mpaaRating = mpaaRating
+        this.screenWriter = screenWriter
+
+        this.id = id
+        this.owner = owner
+
+        cntId = max(id, cntId)
+        this.creationDate = date
     }
 
     constructor(name: String, coordinates: Coordinates,
@@ -163,21 +187,23 @@ class Movie {
                 encodeSerializableElement(descriptor, 6, Person.serializer(), value.screenWriter)
                 encodeLongElement(descriptor, 7, value.id)
                 encodeSerializableElement(descriptor, 8, LocalDateSerializer, value.creationDate)
+                encodeStringElement(descriptor, 9, value.owner)
             }
         }
 
         @OptIn(ExperimentalSerializationApi::class)
         override fun deserialize(decoder: Decoder): Movie {
             return decoder.decodeStructure(descriptor) {
-                var name: String = ""
-                var coordinates: Coordinates = Coordinates(1f, 1.0)
+                var name = ""
+                var coordinates = Coordinates(1f, 1.0)
                 var oscarsCount: Long? = null
-                var length: Int = 12
+                var length = 12
                 var genre: MovieGenre = MovieGenre.ACTION
                 var mpaaRating: MpaaRating? = null
-                var screenWriter: Person = Person("hj", 1, Color.BLACK, null)
+                var screenWriter = Person("hj", 1, Color.BLACK, null)
                 var id: Long = 0
                 var creationDate: LocalDate = LocalDate.now()
+                var owner = ""
                 while (true) {
                     when (val index = decodeElementIndex(descriptor)) {
                         0 -> name = decodeStringElement(descriptor, 0)
@@ -194,11 +220,12 @@ class Movie {
                         6 -> screenWriter = decodeSerializableElement(descriptor, 6, Person.serializer())
                         7 -> id = decodeLongElement(descriptor, 7)
                         8 -> creationDate = decodeSerializableElement(descriptor, 8, LocalDateSerializer)
+                        9 -> owner = decodeStringElement(descriptor, 9)
                         CompositeDecoder.DECODE_DONE -> break
                         else -> error("Unexpected index: $index")
                     }
                 }
-                Movie(name, coordinates, oscarsCount, length, genre, mpaaRating, screenWriter, id, creationDate)
+                Movie(name, coordinates, oscarsCount, length, genre, mpaaRating, screenWriter, id, creationDate, owner)
             }
         }
 

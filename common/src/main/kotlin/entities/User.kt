@@ -1,23 +1,21 @@
 package common.entities
 
 import common.EmptyStringException
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Serializer
 
 @Serializable
 class User {
     private var username: String
     private var password: String
-    constructor(username:String,password: String) {
+    constructor(username:String, password: String) {
         checkUsernameRestrictions(username)
         checkPasswordRestrictions(password)
         this.username=username
         this.password=password
     }
-    companion object{
+    companion object {
         fun checkUsernameRestrictions(name: String) {
-            if (name.isEmpty()) throw EmptyStringException("Movie name can't be empty")
+            if (name.isEmpty()) throw EmptyStringException("User name can't be empty")
             if (name.contains(",")) throw EmptyStringException("User name can't use symbol ','")
         }
 
@@ -26,4 +24,8 @@ class User {
             if (password.length < 4) throw EmptyStringException("Password is too few")
         }
     }
+
+    fun getUsername() = username
+
+    fun getPassword() = password
 }

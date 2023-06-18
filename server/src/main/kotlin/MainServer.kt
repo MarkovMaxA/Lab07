@@ -4,7 +4,7 @@ import common.entities.MovieManager
 import net.UDPServerDatagram
 import java.net.InetAddress
 import kotlinx.coroutines.*
-import managers.DirManager
+import managers.DataBaseManager
 
 @OptIn(DelicateCoroutinesApi::class)
 fun main() = runBlocking {
@@ -15,7 +15,7 @@ fun main() = runBlocking {
     movieManager.load()
     Runtime.getRuntime().addShutdownHook(Thread(movieManager::save))
 
-    val dirManager = DirManager(movieManager)
+    val dirManager = DataBaseManager()//DirManager(movieManager)
 
     val commandManager = CommandManager()
     commandManager.addCommand(AddCommand(movieManager), CommandID.ADD)
