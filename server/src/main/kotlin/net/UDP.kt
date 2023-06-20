@@ -80,24 +80,24 @@ abstract class UDP(var address: InetSocketAddress, val commandManager: CommandMa
                     if (!dataBaseManager.confirmUser(request.user!!))
                         throw Exception("User auth failed")
                 response = commandManager.handle(request)
-                logger.info("Created response $response")
+                logger.info("Created response ${response.commandIDC}")
             } catch (e: Exception) {
                 logger.error("Command error $e", e)
                 response = UniqueCommandResponse(ResponseCode.FAIL, exceptionDataC = "Incorrect login", commandIDC = CommandID.LOGIN)
             }
 
             val dataToSend = ProtoBuf.encodeToByteArray(response)
-            logger.info("Ответ: $response")
+            //logger.info("Response: $response")
 
             try {
                 send(dataToSend, data.second!!)
-                logger.info("Отправлен ответ клиенту ${data.second}")
+                logger.info("Sended response to client ${data.second}")
             } catch (e: java.lang.Exception) {
-                logger.error("Ошибка ввода-вывода : $e", e)
+                logger.error("IO error : $e", e)
             }
 
             disconnect()
-            logger.info("Сервер отключен")
+            //logger.info("Server disconnected")
         }
 
         close()

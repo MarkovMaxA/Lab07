@@ -77,12 +77,12 @@ class UDPServerDatagram(address: InetAddress, commandManager: CommandManager, po
     }
 
     override fun disconnect() {
-        logger.info("Сокет отключился")
+        logger.info("Socket disconnected")
         datagramSocket.disconnect()
     }
 
     override fun close() {
-        logger.info("Сокет закрылся")
+        logger.info("Socket closed")
         datagramSocket.close()
     }
 }
