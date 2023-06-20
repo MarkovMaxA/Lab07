@@ -14,8 +14,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.net.SocketAddress
-import java.util.concurrent.ForkJoinPool
-import java.util.concurrent.RecursiveTask
 
 abstract class UDP(var address: InetSocketAddress, val commandManager: CommandManager, private val dataBaseManager: DataBaseManager) {
     protected val logger: Logger = LoggerFactory.getLogger(UDP::class.java)
@@ -86,7 +84,6 @@ abstract class UDP(var address: InetSocketAddress, val commandManager: CommandMa
             } catch (e: Exception) {
                 logger.error("Command error $e", e)
                 response = UniqueCommandResponse(ResponseCode.FAIL, exceptionDataC = "Incorrect login", commandIDC = CommandID.LOGIN)
-                continue
             }
 
             val dataToSend = ProtoBuf.encodeToByteArray(response)

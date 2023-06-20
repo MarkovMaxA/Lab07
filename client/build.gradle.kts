@@ -4,9 +4,10 @@ plugins {
     id("java")
     kotlin("jvm") version "1.8.21"
     kotlin("plugin.serialization") version "1.8.21"
+    application
 }
 
-group = "org.example"
+version = "7.1"
 
 repositories {
     mavenCentral()
@@ -29,11 +30,25 @@ tasks.test {
     useJUnitPlatform()
 }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+application {
+    mainClass.set("client.MainClientKt")
 }
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
+
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "client.MainClientKt"
+        attributes["Multi-Release"] = true
+
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.main.get().output)
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }

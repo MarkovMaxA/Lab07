@@ -69,6 +69,6 @@ object DataBaseRequests {
             DELETE FROM movie WHERE (owner_login = ?) AND (id = ?) RETURNING id;
             """
     const val GET_MOVIES = """
-        SELECT * FROM movies;
+        SELECT * FROM movie;
     """
 }

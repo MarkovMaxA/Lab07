@@ -25,7 +25,7 @@ class DataBaseManager {
     init {
         val properties = Properties()
 
-        FileReader("server/src/main/resources/db.cfg").use { reader ->
+        FileReader("db.cfg").use { reader ->
             properties.load(reader)
         }
 
